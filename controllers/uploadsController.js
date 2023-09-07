@@ -1,10 +1,13 @@
 const path = require('path');
+const fs = require('fs');
 
 const { v4: uuidv4 } = require('uuid');
+const { v2: cloudinary } = require('cloudinary');
 
 const throwCustomError = require('../errors/custom-error');
 
-exports.uploadProductImage = async (req, res, next) => {
+// Reference for storing images locally on the server
+exports.uploadProductImageLocal = async (req, res, next) => {
   console.log(req.files);
   // check for file existence
   if (!req.files) {
@@ -30,4 +33,15 @@ exports.uploadProductImage = async (req, res, next) => {
   await productImage.mv(imagePath); // we MUST await!
 
   res.status(200).json({ image: { src: `uploads/${imageName}` } });
+};
+
+// Reference for storing images on the cloud (more servers around the world = faster loading and access!)
+exports.uploadProductImage = async (req, res, next) => {
+  const imageTempPath = req.files.image.tempFilePath;
+  const result = await cloudinary.uploader.upload(imageTempPath, {
+    use_filename: true,
+    folder: 'file-upload',
+  });
+  fs.unlinkSync(imageTempPath);
+  res.status(200).json({ image: { src: result.secure_url } });
 };
