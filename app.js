@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 require('express-async-errors');
 require('dotenv').config();
 
+// routes
+const productRoutes = require('./routes/productRoutes');
+
 // error handler
 const notFound = require('./middleware/not-found');
 const errorHandler = require('./middleware/error-handler');
@@ -13,7 +16,7 @@ app.get('/', (req, res) => {
   res.send('File Upload Practice');
 });
 
-
+app.use('/api/v1/products', productRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

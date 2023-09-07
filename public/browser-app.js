@@ -60,7 +60,7 @@ async function fetchProducts () {
   
   const productsDOM = products.map((product)=>{
 return `<article class="product">
-<img src="${product.image}" alt="${product.name}" class="img"/>
+<img src="${product.imageUrl}" alt="${product.name}" class="img"/>
 <footer>
 <p>${product.name}</p>
 <span>$${product.price}</span>
